@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, RefreshCw } from 'lucide-react';
 import { Movie } from '../types/Movie';
-import { trendingMovies } from '../data/mockData';
 import MovieCard from './MovieCard';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -15,9 +14,13 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ onMovieSelect }) => {
 
   const fetchTrendingMovies = async () => {
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setMovies(trendingMovies);
+    try {
+      const response = await fetch('/api/movies/trending');
+      const data = await response.json();
+      setMovies(data.results || []);
+    } catch (error) {
+      setMovies([]);
+    }
     setIsLoading(false);
   };
 

@@ -38,12 +38,14 @@ const MovieCard: React.FC<MovieCardProps> = ({ movie, onMoreInfo, showSimilarity
     }
   };
 
+  const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w500';
+
   return (
     <div className="group bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700/50 hover:border-purple-500/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20">
       {/* Movie Poster */}
       <div className="relative overflow-hidden aspect-[3/4] bg-gray-700">
         <img
-          src={movie.poster_path}
+          src={movie.poster_path ? (movie.poster_path.startsWith('http') ? movie.poster_path : TMDB_IMAGE_BASE + movie.poster_path) : 'https://images.pexels.com/photos/436413/pexels-photo-436413.jpeg?auto=compress&cs=tinysrgb&w=500'}
           alt={movie.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           onError={(e) => {

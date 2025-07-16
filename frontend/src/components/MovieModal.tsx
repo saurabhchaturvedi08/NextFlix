@@ -42,18 +42,20 @@ const MovieModal: React.FC<MovieModalProps> = ({ movie, onClose }) => {
   const mockDirector = 'Christopher Nolan';
   const mockRuntime = 148;
 
+  const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w780';
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
       <div className="bg-gray-900 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto border border-gray-700">
         {/* Header with backdrop */}
         <div className="relative h-64 md:h-80 overflow-hidden rounded-t-xl">
           <img
-            src={movie.backdrop_path}
+            src={movie.backdrop_path ? (movie.backdrop_path.startsWith('http') ? movie.backdrop_path : TMDB_IMAGE_BASE + movie.backdrop_path) : (movie.poster_path ? (movie.poster_path.startsWith('http') ? movie.poster_path : TMDB_IMAGE_BASE + movie.poster_path) : 'https://images.pexels.com/photos/436413/pexels-photo-436413.jpeg?auto=compress&cs=tinysrgb&w=500')}
             alt={movie.title}
             className="w-full h-full object-cover"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = movie.poster_path;
+              target.src = movie.poster_path ? (movie.poster_path.startsWith('http') ? movie.poster_path : TMDB_IMAGE_BASE + movie.poster_path) : 'https://images.pexels.com/photos/436413/pexels-photo-436413.jpeg?auto=compress&cs=tinysrgb&w=500';
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent" />

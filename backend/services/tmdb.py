@@ -1,8 +1,12 @@
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 BASE_URL = "https://api.themoviedb.org/3"
+print("TMDB_API_KEY:", TMDB_API_KEY)
 
 def get_similar_movies(title):
     search_url = f"{BASE_URL}/search/movie"
@@ -47,3 +51,25 @@ def get_movie_details(movie_id):
         "director": director,
         "trailer": trailer
     }
+
+def get_latest_movies():
+    print("TMDB_API_KEY:", TMDB_API_KEY)
+    url = f"{BASE_URL}/movie/now_playing"
+    params = {"api_key": TMDB_API_KEY}
+    res = requests.get(url, params=params)
+    res.raise_for_status()
+    return res.json().get("results", [])
+
+def get_trending_movies():
+    url = f"{BASE_URL}/trending/movie/week"
+    params = {"api_key": TMDB_API_KEY}
+    res = requests.get(url, params=params)
+    res.raise_for_status()
+    return res.json().get("results", [])
+
+def get_upcoming_movies():
+    url = f"{BASE_URL}/movie/upcoming"
+    params = {"api_key": TMDB_API_KEY}
+    res = requests.get(url, params=params)
+    res.raise_for_status()
+    return res.json().get("results", [])

@@ -1,18 +1,45 @@
-from services.watchlist import add_to_watchlist, get_watchlist, remove_from_watchlist
+from flask import Flask, request, jsonify
+from services.ai_recommender import interpret_query
+from services.tmdb import get_latest_movies, get_trending_movies, get_upcoming_movies
 
-@app.route('/api/watchlist', methods=['GET'])
-def get_list():
-    return jsonify(get_watchlist())
+app = Flask(__name__)
 
-@app.route('/api/watchlist/add', methods=['POST'])
-def add_movie():
-    movie = request.get_json()
-    if not movie or 'id' not in movie:
-        return jsonify({'error': 'Invalid movie object'}), 400
-    add_to_watchlist(movie)
-    return jsonify({'message': 'Added to watchlist'})
+@app.route('/api/recommend/query', methods=['POST'])
+def recommend_from_query():
+    data = request.get_json()
+    user_query = data.get("query")
+    if not user_query:
+        return jsonify({"error": "Missing query"}), 400
 
-@app.route('/api/watchlist/<int:movie_id>', methods=['DELETE'])
-def delete_movie(movie_id):
-    remove_from_watchlist(movie_id)
-    return jsonify({'message': 'Removed from watchlist'})
+    try:
+        suggestion = interpret_query(user_query)
+        return jsonify({"suggested": suggestion})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/movies/latest', methods=['GET'])
+def latest_movies():
+    try:
+        movies = get_latest_movies()
+        return jsonify({"results": movies})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/movies/trending', methods=['GET'])
+def trending_movies():
+    try:
+        movies = get_trending_movies()
+        return jsonify({"results": movies})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/movies/upcoming', methods=['GET'])
+def upcoming_movies():
+    try:
+        movies = get_upcoming_movies()
+        return jsonify({"results": movies})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

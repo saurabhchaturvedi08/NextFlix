@@ -10,6 +10,8 @@ import { ToastContainer } from './components/Toast';
 import { useMovieSearch } from './hooks/useMovieSearch';
 import { useToast } from './hooks/useToast';
 import { Movie } from './types/Movie';
+import LatestSection from './components/LatestSection';
+import UpcomingSection from './components/UpcomingSection';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -66,6 +68,12 @@ function App() {
               error={searchState.error}
               onClearError={clearError}
             />
+
+            {/* Latest Movies Section */}
+            <LatestSection onMovieSelect={handleMovieSelect} />
+
+            {/* Upcoming Movies Section */}
+            <UpcomingSection onMovieSelect={handleMovieSelect} />
 
             {/* Recommendations Section - Conditional */}
             <Recommendations
