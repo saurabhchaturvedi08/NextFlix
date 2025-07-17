@@ -3,6 +3,7 @@ import { TrendingUp, RefreshCw } from 'lucide-react';
 import { Movie } from '../types/Movie';
 import MovieCard from './MovieCard';
 import LoadingSpinner from './LoadingSpinner';
+import { fetchTrendingMovies } from '../services/movieService';
 
 interface TrendingSectionProps {
   onMovieSelect?: (movie: Movie) => void;
@@ -12,11 +13,11 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ onMovieSelect }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchTrendingMovies = async () => {
+  const fetchTrending = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/movies/trending');
-      const data = await response.json();
+      const data = await fetchTrendingMovies();
+      console.log('data',data);
       setMovies(data.results || []);
     } catch (error) {
       setMovies([]);
@@ -25,11 +26,11 @@ const TrendingSection: React.FC<TrendingSectionProps> = ({ onMovieSelect }) => {
   };
 
   useEffect(() => {
-    fetchTrendingMovies();
+    fetchTrending();
   }, []);
 
   const handleRefresh = () => {
-    fetchTrendingMovies();
+    fetchTrending();
   };
 
   return (

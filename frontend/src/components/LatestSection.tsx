@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Movie } from '../types/Movie';
 import MovieCard from './MovieCard';
 import LoadingSpinner from './LoadingSpinner';
+import { fetchLatestMovies } from '../services/movieService';
 
 interface LatestSectionProps {
   onMovieSelect?: (movie: Movie) => void;
@@ -11,11 +12,10 @@ const LatestSection: React.FC<LatestSectionProps> = ({ onMovieSelect }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchLatestMovies = async () => {
+  const fetchLatest = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/movies/latest');
-      const data = await response.json();
+      const data = await fetchLatestMovies();
       setMovies(data.results || []);
     } catch (error) {
       setMovies([]);
@@ -24,7 +24,7 @@ const LatestSection: React.FC<LatestSectionProps> = ({ onMovieSelect }) => {
   };
 
   useEffect(() => {
-    fetchLatestMovies();
+    fetchLatest();
   }, []);
 
   return (

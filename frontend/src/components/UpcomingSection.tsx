@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Movie } from '../types/Movie';
 import MovieCard from './MovieCard';
 import LoadingSpinner from './LoadingSpinner';
+import { fetchUpcomingMovies } from '../services/movieService';
 
 interface UpcomingSectionProps {
   onMovieSelect?: (movie: Movie) => void;
@@ -11,11 +12,10 @@ const UpcomingSection: React.FC<UpcomingSectionProps> = ({ onMovieSelect }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUpcomingMovies = async () => {
+  const fetchUpcoming = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/movies/upcoming');
-      const data = await response.json();
+      const data = await fetchUpcomingMovies();
       setMovies(data.results || []);
     } catch (error) {
       setMovies([]);
@@ -24,7 +24,7 @@ const UpcomingSection: React.FC<UpcomingSectionProps> = ({ onMovieSelect }) => {
   };
 
   useEffect(() => {
-    fetchUpcomingMovies();
+    fetchUpcoming();
   }, []);
 
   return (
